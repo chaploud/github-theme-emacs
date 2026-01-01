@@ -44,6 +44,7 @@
 ;;; Code:
 
 (eval-when-compile (require 'subr-x))
+(require 'cl-lib)
 
 (deftheme github "GitHub color theme for Emacs.")
 
@@ -152,6 +153,16 @@ Must be one of `light', `light-high-contrast', `dark', or `dark-dimmed'."
            (mapcar (lambda (v)
                      (floor (* (- 1 factor) v)))
                    (github-theme--hex-to-rgb color)))))
+
+(defun github-theme-blend (color1 color2 opacity)
+  "Blend COLOR1 over COLOR2 with OPACITY (0.0-1.0).
+OPACITY 1.0 = fully COLOR1, 0.0 = fully COLOR2."
+  (let ((rgb1 (github-theme--hex-to-rgb color1))
+        (rgb2 (github-theme--hex-to-rgb color2)))
+    (apply #'github-theme--rgb-to-hex
+           (cl-mapcar (lambda (c1 c2)
+                        (github-theme--rnd (+ c2 (* (- c1 c2) opacity))))
+                      rgb1 rgb2))))
 
 (defun github-theme--light-p (&optional flavor)
   "Return t if FLAVOR (or current flavor) is a light variant."
@@ -312,7 +323,7 @@ FLAVOR defaults to the value of `github-theme-flavor'."
         (gh-git-conflict (github-theme-color 'git-conflict)
                          (github-theme-quantize-color (github-theme-color 'git-conflict)))
 
-        ;; Diff colors
+        ;; Diff colors (original from theme)
         (gh-diff-add-bg (github-theme-color 'diff-add-bg)
                         (github-theme-quantize-color (github-theme-color 'diff-add-bg)))
         (gh-diff-add-fg (github-theme-color 'diff-add-fg)
@@ -325,6 +336,38 @@ FLAVOR defaults to the value of `github-theme-flavor'."
                            (github-theme-quantize-color (github-theme-color 'diff-change-bg)))
         (gh-diff-change-fg (github-theme-color 'diff-change-fg)
                            (github-theme-quantize-color (github-theme-color 'diff-change-fg)))
+
+        ;; Blended diff colors (accent blended with background at 20%/40% opacity)
+        (gh-diff-add-blend (github-theme-blend (github-theme-color 'success-fg)
+                                               (github-theme-color 'canvas-default) 0.2)
+                           (github-theme-quantize-color
+                            (github-theme-blend (github-theme-color 'success-fg)
+                                                (github-theme-color 'canvas-default) 0.2)))
+        (gh-diff-add-blend-emphasis (github-theme-blend (github-theme-color 'success-fg)
+                                                        (github-theme-color 'canvas-default) 0.4)
+                                    (github-theme-quantize-color
+                                     (github-theme-blend (github-theme-color 'success-fg)
+                                                         (github-theme-color 'canvas-default) 0.4)))
+        (gh-diff-remove-blend (github-theme-blend (github-theme-color 'danger-fg)
+                                                  (github-theme-color 'canvas-default) 0.2)
+                              (github-theme-quantize-color
+                               (github-theme-blend (github-theme-color 'danger-fg)
+                                                   (github-theme-color 'canvas-default) 0.2)))
+        (gh-diff-remove-blend-emphasis (github-theme-blend (github-theme-color 'danger-fg)
+                                                           (github-theme-color 'canvas-default) 0.4)
+                                       (github-theme-quantize-color
+                                        (github-theme-blend (github-theme-color 'danger-fg)
+                                                            (github-theme-color 'canvas-default) 0.4)))
+        (gh-diff-change-blend (github-theme-blend (github-theme-color 'attention-fg)
+                                                  (github-theme-color 'canvas-default) 0.2)
+                              (github-theme-quantize-color
+                               (github-theme-blend (github-theme-color 'attention-fg)
+                                                   (github-theme-color 'canvas-default) 0.2)))
+        (gh-diff-change-blend-emphasis (github-theme-blend (github-theme-color 'attention-fg)
+                                                           (github-theme-color 'canvas-default) 0.4)
+                                       (github-theme-quantize-color
+                                        (github-theme-blend (github-theme-color 'attention-fg)
+                                                            (github-theme-color 'canvas-default) 0.4)))
 
         ;; Editor UI
         (gh-cursor (github-theme-color 'cursor)
@@ -687,12 +730,49 @@ FLAVOR defaults to the value of `github-theme-flavor'."
         (magit-signature-untrusted :foreground ,gh-attention-fg)
         (magit-tag :foreground ,gh-attention-fg)
 
+        ;; diff-mode
+        (diff-added :background ,gh-diff-add-blend :extend t)
+        (diff-removed :background ,gh-diff-remove-blend :extend t)
+        (diff-changed :background ,gh-diff-change-blend :extend t)
+        (diff-refine-added :background ,gh-diff-add-blend-emphasis)
+        (diff-refine-removed :background ,gh-diff-remove-blend-emphasis)
+        (diff-refine-changed :background ,gh-diff-change-blend-emphasis)
+        (diff-header :foreground ,gh-accent-fg :weight bold)
+        (diff-file-header :foreground ,gh-accent-fg :weight bold)
+        (diff-hunk-header :foreground ,gh-done-fg)
+        (diff-indicator-added :foreground ,gh-success-fg)
+        (diff-indicator-removed :foreground ,gh-danger-fg)
+        (diff-indicator-changed :foreground ,gh-attention-fg)
+
+        ;; ediff
+        (ediff-current-diff-A :background ,gh-diff-remove-blend :extend t)
+        (ediff-current-diff-B :background ,gh-diff-add-blend :extend t)
+        (ediff-current-diff-C :background ,gh-diff-change-blend :extend t)
+        (ediff-fine-diff-A :background ,gh-diff-remove-blend-emphasis)
+        (ediff-fine-diff-B :background ,gh-diff-add-blend-emphasis)
+        (ediff-fine-diff-C :background ,gh-diff-change-blend-emphasis)
+        (ediff-even-diff-A :background ,gh-canvas-subtle)
+        (ediff-even-diff-B :background ,gh-canvas-subtle)
+        (ediff-even-diff-C :background ,gh-canvas-subtle)
+        (ediff-odd-diff-A :background ,gh-canvas-inset)
+        (ediff-odd-diff-B :background ,gh-canvas-inset)
+        (ediff-odd-diff-C :background ,gh-canvas-inset)
+
+        ;; smerge
+        (smerge-upper :background ,gh-diff-remove-blend :extend t)
+        (smerge-lower :background ,gh-diff-add-blend :extend t)
+        (smerge-base :background ,gh-diff-change-blend :extend t)
+        (smerge-refined-added :background ,gh-diff-add-blend-emphasis)
+        (smerge-refined-removed :background ,gh-diff-remove-blend-emphasis)
+        (smerge-refined-changed :background ,gh-diff-change-blend-emphasis)
+        (smerge-markers :foreground ,gh-fg-muted :background ,gh-canvas-subtle)
+
         ;; markdown-mode
         (markdown-blockquote-face ,@(if github-theme-italic-blockquotes
                                         `(:inherit italic :foreground ,gh-fg-muted)
                                       `(:foreground ,gh-fg-muted)))
         (markdown-bold-face :inherit bold)
-        (markdown-code-face :foreground ,gh-syntax-string :background ,gh-canvas-subtle)
+        (markdown-code-face :foreground ,gh-syntax-string :background ,gh-canvas-default)
         (markdown-header-delimiter-face :foreground ,gh-fg-muted)
         (markdown-header-face :foreground ,gh-accent-fg :weight bold)
         (markdown-header-face-1 :foreground ,gh-accent-fg :weight bold :height 1.4)
@@ -701,12 +781,12 @@ FLAVOR defaults to the value of `github-theme-flavor'."
         (markdown-header-face-4 :foreground ,gh-accent-fg :weight bold :height 1.1)
         (markdown-header-face-5 :foreground ,gh-accent-fg :weight bold)
         (markdown-header-face-6 :foreground ,gh-accent-fg :weight bold)
-        (markdown-inline-code-face :foreground ,gh-syntax-string :background ,gh-canvas-subtle)
+        (markdown-inline-code-face :foreground ,gh-syntax-string :background ,gh-canvas-default)
         (markdown-italic-face :inherit italic)
         (markdown-link-face :foreground ,gh-accent-fg)
         (markdown-list-face :foreground ,gh-syntax-variable)
         (markdown-markup-face :foreground ,gh-fg-muted)
-        (markdown-pre-face :foreground ,gh-syntax-string :background ,gh-canvas-subtle)
+        (markdown-pre-face :foreground ,gh-syntax-string :background ,gh-canvas-default)
         (markdown-url-face :foreground ,gh-accent-fg :underline t)
 
         ;; orderless

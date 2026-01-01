@@ -41,32 +41,32 @@
 
    (neutral-emphasis . "#6e7781")
    (neutral-emphasis-plus . "#24292f")
-   (neutral-muted . "#afb8c133")
-   (neutral-subtle . "#eaeef280")
+   (neutral-muted . "#eff1f3")
+   (neutral-subtle . "#f5f7f9")
 
    (accent-fg . "#0969da")
    (accent-emphasis . "#0969da")
-   (accent-muted . "#54aeff66")
+   (accent-muted . "#bbdfff")
    (accent-subtle . "#ddf4ff")
 
    (success-fg . "#1a7f37")
    (success-emphasis . "#1f883d")
-   (success-muted . "#4ac26b66")
+   (success-muted . "#b7e7c4")
    (success-subtle . "#dafbe1")
 
    (attention-fg . "#9a6700")
    (attention-emphasis . "#bf8700")
-   (attention-muted . "#d4a72c66")
+   (attention-muted . "#eedcab")
    (attention-subtle . "#fff8c5")
 
    (danger-fg . "#cf222e")
    (danger-emphasis . "#cf222e")
-   (danger-muted . "#ff818266")
+   (danger-muted . "#ffcdcd")
    (danger-subtle . "#ffebe9")
 
    (done-fg . "#8250df")
    (done-emphasis . "#8250df")
-   (done-muted . "#c297ff66")
+   (done-muted . "#e7d5ff")
    (done-subtle . "#fbefff")
 
    ;; Syntax highlighting (from tokenColors)
@@ -99,13 +99,13 @@
 
    ;; Editor UI
    (cursor . "#0969da")
-   (selection . "#afb8c133")
-   (match . "#fae17d80")
-   (line-highlight . "#eaeef280")
+   (selection . "#eff1f3")
+   (match . "#fdf0be")
+   (line-highlight . "#f5f7f9")
    (line-number . "#8c959f")
    (line-number-active . "#1f2328")
-   (indent-guide . "#1f23281f")
-   (indent-guide-active . "#1f23283d")
+   (indent-guide . "#e4e4e5")
+   (indent-guide-active . "#cacacc")
    (whitespace . "#afb8c1")
 
    ;; Bracket highlight
@@ -151,32 +151,32 @@
 
    (neutral-emphasis . "#66707b")
    (neutral-emphasis-plus . "#0e1116")
-   (neutral-muted . "#acb6c033")
+   (neutral-muted . "#eef0f2")
    (neutral-subtle . "#e7ecf0")
 
    (accent-fg . "#0349b4")
    (accent-emphasis . "#0349b4")
-   (accent-muted . "#368cf966")
+   (accent-muted . "#afd1fd")
    (accent-subtle . "#dff7ff")
 
    (success-fg . "#055d20")
    (success-emphasis . "#055d20")
-   (success-muted . "#26a14866")
+   (success-muted . "#a8d9b6")
    (success-subtle . "#d2fedb")
 
    (attention-fg . "#744500")
    (attention-emphasis . "#744500")
-   (attention-muted . "#b5840766")
+   (attention-muted . "#e1ce9c")
    (attention-subtle . "#fcf7be")
 
    (danger-fg . "#a0111f")
    (danger-emphasis . "#a0111f")
-   (danger-muted . "#ee5a5d66")
+   (danger-muted . "#f8bdbe")
    (danger-subtle . "#fff0ee")
 
    (done-fg . "#622cbc")
    (done-emphasis . "#622cbc")
-   (done-muted . "#844ae766")
+   (done-muted . "#ceb7f5")
    (done-subtle . "#faf0fe")
 
    ;; Syntax highlighting
@@ -211,12 +211,12 @@
    (cursor . "#0349b4")
    (selection . "#0e1116")
    (selection-fg . "#ffffff")
-   (match . "#f0ce5380")
+   (match . "#f8e7a9")
    (line-highlight . "#e7ecf0")
    (line-number . "#88929d")
    (line-number-active . "#0e1116")
-   (indent-guide . "#0e11161f")
-   (indent-guide-active . "#0e11163d")
+   (indent-guide . "#e2e2e3")
+   (indent-guide-active . "#c5c6c7")
    (whitespace . "#acb6c0")
 
    ;; Bracket highlight
@@ -262,33 +262,33 @@
 
    (neutral-emphasis . "#6e7681")
    (neutral-emphasis-plus . "#f0f6fc")
-   (neutral-muted . "#6e768166")
-   (neutral-subtle . "#6e76811a")
+   (neutral-muted . "#343941")
+   (neutral-subtle . "#171b22")
 
    (accent-fg . "#2f81f7")
    (accent-emphasis . "#1f6feb")
-   (accent-muted . "#388bfd66")
-   (accent-subtle . "#388bfd26")
+   (accent-muted . "#1e4273")
+   (accent-subtle . "#13233a")
 
    (success-fg . "#3fb950")
    (success-emphasis . "#238636")
-   (success-muted . "#2ea04366")
-   (success-subtle . "#2ea04326")
+   (success-muted . "#1a4a29")
+   (success-subtle . "#12261e")
 
    (attention-fg . "#d29922")
    (attention-emphasis . "#9e6a03")
-   (attention-muted . "#bb800966")
-   (attention-subtle . "#bb800926")
+   (attention-muted . "#533d11")
+   (attention-subtle . "#272215")
 
    (danger-fg . "#f85149")
    (danger-emphasis . "#da3633")
-   (danger-muted . "#f8514966")
-   (danger-subtle . "#f8514926")
+   (danger-muted . "#6b2b2b")
+   (danger-subtle . "#301b1f")
 
    (done-fg . "#a371f7")
    (done-emphasis . "#8957e5")
-   (done-muted . "#a371f766")
-   (done-subtle . "#a371f726")
+   (done-muted . "#493771")
+   (done-subtle . "#241f39")
 
    ;; Syntax highlighting
    (syntax-comment . "#8b949e")
@@ -311,22 +311,22 @@
    (git-conflict . "#db6d28")
 
    ;; Diff colors
-   (diff-add-bg . "#23863626")
+   (diff-add-bg . "#10231c")
    (diff-add-fg . "#7ee787")
-   (diff-remove-bg . "#da363326")
+   (diff-remove-bg . "#2c171b")
    (diff-remove-fg . "#ffa198")
    (diff-change-bg . "#5a1e02")
    (diff-change-fg . "#ffa657")
 
    ;; Editor UI
    (cursor . "#2f81f7")
-   (selection . "#6e768166")
-   (match . "#f2cc6080")
-   (line-highlight . "#6e76811a")
+   (selection . "#343941")
+   (match . "#806f3c")
+   (line-highlight . "#171b22")
    (line-number . "#6e7681")
    (line-number-active . "#e6edf3")
-   (indent-guide . "#e6edf31f")
-   (indent-guide-active . "#e6edf33d")
+   (indent-guide . "#272b31")
+   (indent-guide-active . "#41464c")
    (whitespace . "#484f58")
 
    ;; Bracket highlight
@@ -372,33 +372,33 @@
 
    (neutral-emphasis . "#636e7b")
    (neutral-emphasis-plus . "#cdd9e5")
-   (neutral-muted . "#636e7b66")
-   (neutral-subtle . "#636e7b1a")
+   (neutral-muted . "#3c434d")
+   (neutral-subtle . "#292e36")
 
    (accent-fg . "#539bf5")
    (accent-emphasis . "#316dca")
-   (accent-muted . "#4184e466")
-   (accent-subtle . "#4184e426")
+   (accent-muted . "#2e4c77")
+   (accent-subtle . "#273549")
 
    (success-fg . "#57ab5a")
    (success-emphasis . "#347d39")
-   (success-muted . "#46954a66")
-   (success-subtle . "#46954a26")
+   (success-muted . "#305339")
+   (success-subtle . "#273732")
 
    (attention-fg . "#c69026")
    (attention-emphasis . "#966600")
-   (attention-muted . "#ae7c1466")
-   (attention-subtle . "#ae7c1426")
+   (attention-muted . "#5a4924")
+   (attention-subtle . "#37342a")
 
    (danger-fg . "#e5534b")
    (danger-emphasis . "#c93c37")
-   (danger-muted . "#e5534b66")
-   (danger-subtle . "#e5534b26")
+   (danger-muted . "#70393a")
+   (danger-subtle . "#3f2e32")
 
    (done-fg . "#986ee2")
    (done-emphasis . "#8256d0")
-   (done-muted . "#986ee266")
-   (done-subtle . "#986ee226")
+   (done-muted . "#514376")
+   (done-subtle . "#343249")
 
    ;; Syntax highlighting
    (syntax-comment . "#768390")
@@ -421,22 +421,22 @@
    (git-conflict . "#cc6b2c")
 
    ;; Diff colors
-   (diff-add-bg . "#347d3926")
+   (diff-add-bg . "#253430")
    (diff-add-fg . "#8ddb8c")
-   (diff-remove-bg . "#c93c3726")
+   (diff-remove-bg . "#3b2a2f")
    (diff-remove-fg . "#ff938a")
    (diff-change-bg . "#682d0f")
    (diff-change-fg . "#f69d50")
 
    ;; Editor UI
    (cursor . "#539bf5")
-   (selection . "#636e7b66")
-   (match . "#eac55f80")
-   (line-highlight . "#636e7b1a")
+   (selection . "#3c434d")
+   (match . "#867647")
+   (line-highlight . "#292e36")
    (line-number . "#636e7b")
    (line-number-active . "#adbac7")
-   (indent-guide . "#adbac71f")
-   (indent-guide-active . "#adbac73d")
+   (indent-guide . "#333941")
+   (indent-guide-active . "#434a53")
    (whitespace . "#545d68")
 
    ;; Bracket highlight
