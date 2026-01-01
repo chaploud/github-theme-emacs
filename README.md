@@ -1,6 +1,6 @@
 # GitHub Theme for Emacs
 
-[![CI](https://github.com/your-username/github-theme-emacs/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/github-theme-emacs/actions/workflows/ci.yml)
+[![CI](https://github.com/chaploud/github-theme-emacs/actions/workflows/ci.yml/badge.svg)](https://github.com/chaploud/github-theme-emacs/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Emacs 27.1+](https://img.shields.io/badge/Emacs-27.1%2B-blueviolet.svg)
 <!-- [![MELPA](https://melpa.org/packages/github-theme-badge.svg)](https://melpa.org/#/github-theme) -->
@@ -33,7 +33,7 @@ A faithful port of [GitHub's official color schemes](https://github.com/primer/g
 
 1. Clone this repository:
    ```sh
-   git clone https://github.com/your-username/github-theme-emacs.git ~/.emacs.d/themes/github-theme
+   git clone https://github.com/chaploud/github-theme-emacs.git ~/.emacs.d/themes/github-theme
    ```
 
 2. Add to your Emacs configuration:
@@ -49,7 +49,7 @@ A faithful port of [GitHub's official color schemes](https://github.com/primer/g
 Add to `packages.el`:
 ```elisp
 (package! github-theme
-  :recipe (:host github :repo "your-username/github-theme-emacs"))
+  :recipe (:host github :repo "chaploud/github-theme-emacs"))
 ```
 
 Add to `config.el`:
@@ -63,7 +63,7 @@ Add to `config.el`:
 Add `github-theme` to `dotspacemacs-additional-packages`:
 ```elisp
 dotspacemacs-additional-packages '(
-  (github-theme :location (recipe :fetcher github :repo "your-username/github-theme-emacs"))
+  (github-theme :location (recipe :fetcher github :repo "chaploud/github-theme-emacs"))
 )
 ```
 

@@ -5,7 +5,7 @@
 ;; Author: Shota Tamura
 ;; Version: 1.0.0
 ;; Package-Requires: ((emacs "27.1"))
-;; URL: https://github.com/your-username/github-theme-emacs
+;; URL: https://github.com/chaploud/github-theme-emacs
 ;; Keywords: faces themes
 
 ;; This file is part of github-theme.
@@ -689,8 +689,8 @@ FLAVOR defaults to the value of `github-theme-flavor'."
 
         ;; markdown-mode
         (markdown-blockquote-face ,@(if github-theme-italic-blockquotes
-                                        '(:inherit italic :foreground ,gh-fg-muted)
-                                      '(:foreground ,gh-fg-muted)))
+                                        `(:inherit italic :foreground ,gh-fg-muted)
+                                      `(:foreground ,gh-fg-muted)))
         (markdown-bold-face :inherit bold)
         (markdown-code-face :foreground ,gh-syntax-string :background ,gh-canvas-subtle)
         (markdown-header-delimiter-face :foreground ,gh-fg-muted)
@@ -737,8 +737,8 @@ FLAVOR defaults to the value of `github-theme-flavor'."
         (org-link :foreground ,gh-accent-fg :underline t)
         (org-priority :foreground ,gh-attention-fg)
         (org-quote ,@(if github-theme-italic-blockquotes
-                         '(:inherit italic :foreground ,gh-fg-muted)
-                       '(:foreground ,gh-fg-muted)))
+                         `(:inherit italic :foreground ,gh-fg-muted)
+                       `(:foreground ,gh-fg-muted)))
         (org-special-keyword :foreground ,gh-fg-muted)
         (org-table :foreground ,gh-fg-default)
         (org-tag :foreground ,gh-fg-muted)
