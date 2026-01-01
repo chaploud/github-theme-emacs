@@ -1,6 +1,6 @@
 ;;; github-theme-test.el --- Tests for GitHub theme -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Free Software Foundation, Inc.
+;; Copyright (C) 2026 chaploud
 
 ;; This file is part of github-theme.
 

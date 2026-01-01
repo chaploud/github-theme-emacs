@@ -1,6 +1,6 @@
 ;;; github-definitions.el --- The GitHub color palette -*- no-byte-compile: t; lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Free Software Foundation, Inc.
+;; Copyright (C) 2026 chaploud
 
 ;; This file is part of github-theme.
 

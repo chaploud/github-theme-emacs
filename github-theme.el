@@ -1,8 +1,8 @@
 ;;; github-theme.el --- GitHub color theme -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Free Software Foundation, Inc.
+;; Copyright (C) 2026 chaploud
 
-;; Author: Shota Tamura
+;; Author: chaploud <kudou-s0camfci76w@outlook.com>
 ;; Version: 1.0.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/chaploud/github-theme-emacs

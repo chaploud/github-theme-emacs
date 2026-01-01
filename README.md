@@ -3,10 +3,18 @@
 [![CI](https://github.com/chaploud/github-theme-emacs/actions/workflows/ci.yml/badge.svg)](https://github.com/chaploud/github-theme-emacs/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Emacs 27.1+](https://img.shields.io/badge/Emacs-27.1%2B-blueviolet.svg)
-<!-- [![MELPA](https://melpa.org/packages/github-theme-badge.svg)](https://melpa.org/#/github-theme) -->
-<!-- [![MELPA Stable](https://stable.melpa.org/packages/github-theme-badge.svg)](https://stable.melpa.org/#/github-theme) -->
 
-A faithful port of [GitHub's official color schemes](https://github.com/primer/github-vscode-theme) to Emacs. Colors extracted from the official GitHub VS Code theme using the [Primer Design System](https://primer.style/design/foundations/color/).
+A faithful port of [GitHub's official color schemes](https://github.com/primer/github-vscode-theme) to Emacs. Colors extracted from the official GitHub VS Code theme using the [Primer Design System](https://primer.style/foundations/color).
+
+## Screenshots
+
+| Light | Light High Contrast |
+|:-----:|:-------------------:|
+| ![Light](screenshots/light.png) | ![Light High Contrast](screenshots/light-high-contrast.png) |
+
+| Dark | Dark Dimmed |
+|:----:|:-----------:|
+| ![Dark](screenshots/dark.png) | ![Dark Dimmed](screenshots/dark-dimmed.png) |
 
 ## Flavors
 
@@ -19,126 +27,111 @@ A faithful port of [GitHub's official color schemes](https://github.com/primer/g
 
 ## Installation
 
-### MELPA (Coming Soon)
+### use-package with :vc (Emacs 30+)
+
+Emacs 30 has built-in `:vc` support in use-package:
 
 ```elisp
 (use-package github-theme
-  :ensure t
+  :vc (:url "https://github.com/chaploud/github-theme-emacs" :rev :newest)
+  :custom
+  (github-theme-flavor 'dark)
   :config
-  (setq github-theme-flavor 'dark)
+  (load-theme 'github t))
+```
+
+### use-package with vc-use-package (Emacs 29)
+
+For Emacs 29, install [vc-use-package](https://github.com/slotThe/vc-use-package) first:
+
+```elisp
+;; Bootstrap vc-use-package
+(unless (package-installed-p 'vc-use-package)
+  (package-vc-install "https://github.com/slotThe/vc-use-package"))
+(require 'vc-use-package)
+
+(use-package github-theme
+  :vc (:fetcher github :repo "chaploud/github-theme-emacs")
+  :custom
+  (github-theme-flavor 'dark)
+  :config
   (load-theme 'github t))
 ```
 
 ### Manual Installation
 
 1. Clone this repository:
-   ```sh
-   git clone https://github.com/chaploud/github-theme-emacs.git ~/.emacs.d/themes/github-theme
-   ```
+
+```sh
+git clone https://github.com/chaploud/github-theme-emacs.git ~/.emacs.d/themes/github-theme
+```
 
 2. Add to your Emacs configuration:
-   ```elisp
-   (add-to-list 'load-path "~/.emacs.d/themes/github-theme")
-   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/github-theme")
-   (setq github-theme-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
-   (load-theme 'github t)
-   ```
 
-### Doom Emacs
-
-Add to `packages.el`:
 ```elisp
-(package! github-theme
-  :recipe (:host github :repo "chaploud/github-theme-emacs"))
-```
-
-Add to `config.el`:
-```elisp
+(add-to-list 'load-path "~/.emacs.d/themes/github-theme")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/github-theme")
 (setq github-theme-flavor 'dark)
-(setq doom-theme 'github)
-```
-
-### Spacemacs
-
-Add `github-theme` to `dotspacemacs-additional-packages`:
-```elisp
-dotspacemacs-additional-packages '(
-  (github-theme :location (recipe :fetcher github :repo "chaploud/github-theme-emacs"))
-)
-```
-
-Set the theme:
-```elisp
-dotspacemacs-themes '(github)
+(load-theme 'github t)
 ```
 
 ## Configuration
 
 ### Set Flavor
 
+With use-package `:custom`:
+
 ```elisp
-;; Set before loading the theme
-(setq github-theme-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
+(use-package github-theme
+  :vc (:url "https://github.com/chaploud/github-theme-emacs" :rev :newest)
+  :custom
+  (github-theme-flavor 'dark)           ; 'light, 'light-high-contrast, 'dark, 'dark-dimmed
+  (github-theme-italic-comments t)      ; Use italic for comments
+  (github-theme-italic-blockquotes t)   ; Use italic for blockquotes
+  (github-theme-italic-variables nil)   ; Use italic for variables
+  :config
+  (load-theme 'github t))
+```
+
+Or with `setq`:
+
+```elisp
+(setq github-theme-flavor 'dark)
+(setq github-theme-italic-comments t)
 (load-theme 'github t)
 ```
 
 ### Switch Flavor Interactively
 
-```elisp
+```
 M-x github-theme-load-flavor
 ```
 
 Or programmatically:
+
 ```elisp
 (github-theme-load-flavor 'light)
-```
-
-### Customization Options
-
-```elisp
-;; Use italic for comments
-(setq github-theme-italic-comments t)
-
-;; Use italic for blockquotes in markdown/org
-(setq github-theme-italic-blockquotes t)
-
-;; Use italic for variables
-(setq github-theme-italic-variables nil)
-
-;; Reload theme to apply changes
-(github-theme-reload)
 ```
 
 ### Custom Colors
 
 Override specific colors:
+
 ```elisp
 (github-theme-set-color 'accent-fg "#ff0000")
 (github-theme-reload)
 ```
 
 Get a color value:
+
 ```elisp
 (github-theme-color 'accent-fg) ; => "#0969da" (for light theme)
 ```
 
-## Supported Packages
-
-The theme provides faces for:
-
-- **Core**: Font-lock, mode-line, fringe, line numbers, whitespace
-- **Completion**: Company, Corfu, Ivy, Vertico, Orderless
-- **Git**: Magit, Diff-hl, Git-gutter
-- **Org**: Org-mode, Markdown-mode
-- **File Navigation**: Dired, Treemacs
-- **Syntax**: Tree-sitter
-- **LSP**: LSP-mode
-- **Checking**: Flycheck, Flymake
-- **Misc**: Avy, Rainbow-delimiters, Which-key
-
 ## Color Palette
 
 ### Light Default
+
 | Role | Color |
 |------|-------|
 | Foreground | `#1f2328` |
@@ -149,6 +142,7 @@ The theme provides faces for:
 | Attention | `#9a6700` |
 
 ### Dark Default
+
 | Role | Color |
 |------|-------|
 | Foreground | `#e6edf3` |
@@ -172,9 +166,10 @@ emacs --batch -l github-theme-test.el
 
 ### Building Color Definitions
 
-Colors are extracted from the official GitHub VS Code theme:
+Colors are extracted from the official [GitHub VS Code Theme](https://github.com/primer/github-vscode-theme):
 
 ```sh
+git clone https://github.com/primer/github-vscode-theme.git
 cd github-vscode-theme
 npm install
 npm run build
@@ -184,7 +179,7 @@ npm run build
 ## Credits
 
 - [GitHub VS Code Theme](https://github.com/primer/github-vscode-theme) - Official source
-- [Primer Design System](https://primer.style/design/foundations/color/) - Color system
+- [Primer Design System](https://primer.style/foundations/color) - Color system
 - [Catppuccin Emacs](https://github.com/catppuccin/emacs) - Architecture reference
 
 ## License
