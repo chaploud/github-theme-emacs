@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+
+jobs:
+  test:
+    name: Test (Emacs ${{ matrix.emacs_version }})
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        emacs_version:
+          - 27.1
+          - 27.2
+          - 28.1
+          - 28.2
+          - 29.1
+          - 29.4
+          - 30.1
+        experimental: [false]
+        include:
+          - os: ubuntu-latest
+            emacs_version: snapshot
+            experimental: true
+          - os: macos-latest
+            emacs_version: 29.4
+            experimental: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs_version }}
+
+      - name: Show Emacs version
+        run: emacs --version
+
+      - name: Run tests
+        run: emacs --batch -l github-theme-test.el
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: 29.4
+
+      - name: Byte compile
+        uses: leotaku/elisp-check@master
+        with:
+          check: byte-compile
+          file: github-theme.el
+
+      - name: Checkdoc
+        uses: leotaku/elisp-check@master
+        with:
+          check: checkdoc
+          file: github-theme.el
+
+      - name: Package lint
+        uses: leotaku/elisp-check@master
+        with:
+          check: package-lint
+          file: github-theme.el
+
+  load-test:
+    name: Load Test (All Flavors)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Emacs
+        uses: purcell/setup-emacs@master
+        with:
+          version: 29.4
+
+      - name: Test loading all flavors
+        run: |
+          emacs --batch \
+            -l github-theme.el \
+            --eval "(progn
+              (dolist (flavor '(light light-high-contrast dark dark-dimmed))
+                (setq github-flavor flavor)
+                (load-theme 'github t)
+                (message \"Successfully loaded flavor: %s\" flavor))
+              (message \"All flavors loaded successfully!\"))"
