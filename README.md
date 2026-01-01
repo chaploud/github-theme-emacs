@@ -25,7 +25,7 @@ A faithful port of [GitHub's official color schemes](https://github.com/primer/g
 (use-package github-theme
   :ensure t
   :config
-  (setq github-flavor 'dark)
+  (setq github-theme-flavor 'dark)
   (load-theme 'github t))
 ```
 
@@ -40,7 +40,7 @@ A faithful port of [GitHub's official color schemes](https://github.com/primer/g
    ```elisp
    (add-to-list 'load-path "~/.emacs.d/themes/github-theme")
    (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/github-theme")
-   (setq github-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
+   (setq github-theme-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
    (load-theme 'github t)
    ```
 
@@ -54,7 +54,7 @@ Add to `packages.el`:
 
 Add to `config.el`:
 ```elisp
-(setq github-flavor 'dark)
+(setq github-theme-flavor 'dark)
 (setq doom-theme 'github)
 ```
 
@@ -78,48 +78,48 @@ dotspacemacs-themes '(github)
 
 ```elisp
 ;; Set before loading the theme
-(setq github-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
+(setq github-theme-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
 (load-theme 'github t)
 ```
 
 ### Switch Flavor Interactively
 
 ```elisp
-M-x github-load-flavor
+M-x github-theme-load-flavor
 ```
 
 Or programmatically:
 ```elisp
-(github-load-flavor 'light)
+(github-theme-load-flavor 'light)
 ```
 
 ### Customization Options
 
 ```elisp
 ;; Use italic for comments
-(setq github-italic-comments t)
+(setq github-theme-italic-comments t)
 
 ;; Use italic for blockquotes in markdown/org
-(setq github-italic-blockquotes t)
+(setq github-theme-italic-blockquotes t)
 
 ;; Use italic for variables
-(setq github-italic-variables nil)
+(setq github-theme-italic-variables nil)
 
 ;; Reload theme to apply changes
-(github-reload)
+(github-theme-reload)
 ```
 
 ### Custom Colors
 
 Override specific colors:
 ```elisp
-(github-set-color 'accent-fg "#ff0000")
-(github-reload)
+(github-theme-set-color 'accent-fg "#ff0000")
+(github-theme-reload)
 ```
 
 Get a color value:
 ```elisp
-(github-color 'accent-fg) ; => "#0969da" (for light theme)
+(github-theme-color 'accent-fg) ; => "#0969da" (for light theme)
 ```
 
 ## Supported Packages

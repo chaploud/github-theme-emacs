@@ -100,7 +100,7 @@ jobs:
             -l github-theme.el \
             --eval "(progn
               (dolist (flavor '(light light-high-contrast dark dark-dimmed))
-                (setq github-flavor flavor)
+                (setq github-theme-flavor flavor)
                 (load-theme 'github t)
                 (message \"Successfully loaded flavor: %s\" flavor))
               (message \"All flavors loaded successfully!\"))"

@@ -1,4 +1,4 @@
-;;; github-theme.el --- GitHub theme for Emacs -*- lexical-binding: t; -*-
+;;; github-theme.el --- GitHub color theme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2024 Free Software Foundation, Inc.
 
@@ -32,7 +32,7 @@
 ;;
 ;; To select a flavor and enable the theme:
 ;;
-;;     (setq github-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
+;;     (setq github-theme-flavor 'dark) ; or 'light, 'dark-dimmed, 'light-high-contrast
 ;;     (load-theme 'github t)
 ;;
 ;; Available flavors:
@@ -49,13 +49,13 @@
 
 ;;; Configuration options:
 
-(defgroup github nil
+(defgroup github-theme nil
   "GitHub theme options.
 
 The theme has to be reloaded after changing anything in this group."
   :group 'faces)
 
-(defcustom github-flavor 'dark
+(defcustom github-theme-flavor 'dark
   "The flavor to use for the GitHub theme.
 Must be one of `light', `light-high-contrast', `dark', or `dark-dimmed'."
   :type '(choice
@@ -63,34 +63,34 @@ Must be one of `light', `light-high-contrast', `dark', or `dark-dimmed'."
           (const :tag "Light High Contrast" light-high-contrast)
           (const :tag "Dark Default" dark)
           (const :tag "Dark Dimmed" dark-dimmed))
-  :group 'github)
+  :group 'github-theme)
 
-(defcustom github-italic-comments nil
+(defcustom github-theme-italic-comments nil
   "Use :slant italic for comments."
   :type 'boolean
-  :group 'github)
+  :group 'github-theme)
 
-(defcustom github-italic-blockquotes t
+(defcustom github-theme-italic-blockquotes t
   "Use :slant italic for blockquotes in markdown and org."
   :type 'boolean
-  :group 'github)
+  :group 'github-theme)
 
-(defcustom github-italic-variables nil
+(defcustom github-theme-italic-variables nil
   "Use :slant italic for variables."
   :type 'boolean
-  :group 'github)
+  :group 'github-theme)
 
 ;;; Flavor definitions:
 
-(defun github--define-flavor (flavor colors)
+(defun github-theme--define-flavor (flavor colors)
   "Define a new GitHub flavor named FLAVOR with COLORS."
   (custom-declare-variable (intern (concat "github-" (symbol-name flavor) "-colors"))
     `(funcall ',(lambda () colors))
     (concat "Colors for GitHub " (symbol-name flavor))
     :type '(alist :key-type symbol :value-type string)
-    :group 'github))
+    :group 'github-theme))
 
-(defvar github-flavor-alist '()
+(defvar github-theme-flavor-alist '()
   "Alist of flavors to alist of names to hex colors.")
 
 (when load-file-name
@@ -98,21 +98,21 @@ Must be one of `light', `light-high-contrast', `dark', or `dark-dimmed'."
   (with-temp-buffer
     (insert-file-contents (expand-file-name "github-definitions.el"
                             (file-name-directory load-file-name)))
-    (setq github-flavor-alist (read (current-buffer))))
+    (setq github-theme-flavor-alist (read (current-buffer))))
 
   ;; Define flavors
-  (let ((flavor #'(lambda (sym) (alist-get sym github-flavor-alist))))
-    (github--define-flavor 'light (funcall flavor 'light))
-    (github--define-flavor 'light-high-contrast (funcall flavor 'light-high-contrast))
-    (github--define-flavor 'dark (funcall flavor 'dark))
-    (github--define-flavor 'dark-dimmed (funcall flavor 'dark-dimmed))))
+  (let ((flavor #'(lambda (sym) (alist-get sym github-theme-flavor-alist))))
+    (github-theme--define-flavor 'light (funcall flavor 'light))
+    (github-theme--define-flavor 'light-high-contrast (funcall flavor 'light-high-contrast))
+    (github-theme--define-flavor 'dark (funcall flavor 'dark))
+    (github-theme--define-flavor 'dark-dimmed (funcall flavor 'dark-dimmed))))
 
-(unless (listp github-flavor-alist)
+(unless (listp github-theme-flavor-alist)
   (error "Please load with `load' or `require'"))
 
 ;;; Internal functions:
 
-(defun github-quantize-color (color)
+(defun github-theme-quantize-color (color)
   "Quantize COLOR to a 256 color palette."
   (let ((i 1)
         (str "#"))
@@ -124,55 +124,55 @@ Must be one of `light', `light-high-contrast', `dark', or `dark-dimmed'."
       (setq i (+ i 2)))
     str))
 
-(defun github--hex-to-rgb (color)
+(defun github-theme--hex-to-rgb (color)
   "Convert a hex COLOR string like \"#rrggbb\" to a list of three integers."
   (mapcar (lambda (i) (string-to-number (substring color i (+ i 2)) 16))
           '(1 3 5)))
 
-(defun github--rgb-to-hex (r g b)
+(defun github-theme--rgb-to-hex (r g b)
   "Convert R, G, B integers to a hex color string."
   (format "#%02x%02x%02x" r g b))
 
-(defun github--rnd (n)
+(defun github-theme--rnd (n)
   "Round N to the nearest integer."
   (round n))
 
-(defun github-lighten (color value)
+(defun github-theme-lighten (color value)
   "Lighten COLOR by VALUE% (0-100)."
   (let* ((factor (/ value 100.0)))
-    (apply #'github--rgb-to-hex
+    (apply #'github-theme--rgb-to-hex
            (mapcar (lambda (v)
-                     (github--rnd (min 255 (+ (* (- 255 v) factor) v))))
-                   (github--hex-to-rgb color)))))
+                     (github-theme--rnd (min 255 (+ (* (- 255 v) factor) v))))
+                   (github-theme--hex-to-rgb color)))))
 
-(defun github-darken (color value)
+(defun github-theme-darken (color value)
   "Darken COLOR by VALUE% (0-100)."
   (let* ((factor (/ value 100.0)))
-    (apply #'github--rgb-to-hex
+    (apply #'github-theme--rgb-to-hex
            (mapcar (lambda (v)
                      (floor (* (- 1 factor) v)))
-                   (github--hex-to-rgb color)))))
+                   (github-theme--hex-to-rgb color)))))
 
-(defun github--light-p (&optional flavor)
+(defun github-theme--light-p (&optional flavor)
   "Return t if FLAVOR (or current flavor) is a light variant."
-  (memq (or flavor github-flavor) '(light light-high-contrast)))
+  (memq (or flavor github-theme-flavor) '(light light-high-contrast)))
 
-(defun github-recolor (color value)
+(defun github-theme-recolor (color value)
   "Darken or lighten COLOR based on the current flavor."
-  (if (github--light-p)
-      (github-darken color value)
-    (github-lighten color value)))
+  (if (github-theme--light-p)
+      (github-theme-darken color value)
+    (github-theme-lighten color value)))
 
 ;;; User functions:
 
-(defun github-reload ()
+(defun github-theme-reload ()
   "Reload the GitHub theme.
-Useful after setting custom colors with `github-set-color'."
+Useful after setting custom colors with `github-theme-set-color'."
   (interactive)
   (disable-theme 'github)
   (load-theme 'github t))
 
-(defun github-load-flavor (flavor)
+(defun github-theme-load-flavor (flavor)
   "Set the GitHub flavor to FLAVOR and reload the theme.
 If called interactively, a list of flavors is presented."
   (interactive
@@ -181,29 +181,29 @@ If called interactively, a list of flavors is presented."
              "GitHub flavor: "
              '(light light-high-contrast dark dark-dimmed)
              nil t))))
-  (setq github-flavor flavor)
-  (github-reload)
+  (setq github-theme-flavor flavor)
+  (github-theme-reload)
   (message "GitHub flavor changed to %s" flavor))
 
-(defun github--colors-of (&optional flavor)
+(defun github-theme--colors-of (&optional flavor)
   "Return a symbol for the alist containing FLAVOR's colors.
-FLAVOR defaults to the value of `github-flavor'."
-  (intern-soft (concat "github-" (symbol-name (or flavor github-flavor)) "-colors")))
+FLAVOR defaults to the value of `github-theme-flavor'."
+  (intern-soft (concat "github-" (symbol-name (or flavor github-theme-flavor)) "-colors")))
 
-(defun github-set-color (color value &optional flavor)
+(defun github-theme-set-color (color value &optional flavor)
   "Set the COLOR of FLAVOR (or current flavor) to VALUE."
   (interactive "SChange color: \nsSet %s to: ")
-  (setcdr (assoc color (symbol-value (github--colors-of flavor))) value))
+  (setcdr (assoc color (symbol-value (github-theme--colors-of flavor))) value))
 
-(defun github-color (color &optional flavor)
+(defun github-theme-color (color &optional flavor)
   "Get the COLOR of FLAVOR or the current flavor."
   (interactive "SColor: ")
-  (let ((result (alist-get color (symbol-value (github--colors-of flavor)))))
+  (let ((result (alist-get color (symbol-value (github-theme--colors-of flavor)))))
     (if (called-interactively-p 'interactive)
         (message result)
       result)))
 
-(defalias 'github-get-color 'github-color)
+(defalias 'github-theme-get-color 'github-theme-color)
 
 ;;; Theme definition:
 
@@ -211,193 +211,193 @@ FLAVOR defaults to the value of `github-flavor'."
     ((colors
       '((undef "#ff00ff" "#ff00ff")
         ;; Foreground colors
-        (gh-fg-default (github-color 'fg-default)
-                       (github-quantize-color (github-color 'fg-default)))
-        (gh-fg-muted (github-color 'fg-muted)
-                     (github-quantize-color (github-color 'fg-muted)))
-        (gh-fg-subtle (github-color 'fg-subtle)
-                      (github-quantize-color (github-color 'fg-subtle)))
-        (gh-fg-on-emphasis (github-color 'fg-on-emphasis)
-                           (github-quantize-color (github-color 'fg-on-emphasis)))
+        (gh-fg-default (github-theme-color 'fg-default)
+                       (github-theme-quantize-color (github-theme-color 'fg-default)))
+        (gh-fg-muted (github-theme-color 'fg-muted)
+                     (github-theme-quantize-color (github-theme-color 'fg-muted)))
+        (gh-fg-subtle (github-theme-color 'fg-subtle)
+                      (github-theme-quantize-color (github-theme-color 'fg-subtle)))
+        (gh-fg-on-emphasis (github-theme-color 'fg-on-emphasis)
+                           (github-theme-quantize-color (github-theme-color 'fg-on-emphasis)))
 
         ;; Canvas/Background colors
-        (gh-canvas-default (github-color 'canvas-default)
-                           (github-quantize-color (github-color 'canvas-default)))
-        (gh-canvas-overlay (github-color 'canvas-overlay)
-                           (github-quantize-color (github-color 'canvas-overlay)))
-        (gh-canvas-inset (github-color 'canvas-inset)
-                         (github-quantize-color (github-color 'canvas-inset)))
-        (gh-canvas-subtle (github-color 'canvas-subtle)
-                          (github-quantize-color (github-color 'canvas-subtle)))
+        (gh-canvas-default (github-theme-color 'canvas-default)
+                           (github-theme-quantize-color (github-theme-color 'canvas-default)))
+        (gh-canvas-overlay (github-theme-color 'canvas-overlay)
+                           (github-theme-quantize-color (github-theme-color 'canvas-overlay)))
+        (gh-canvas-inset (github-theme-color 'canvas-inset)
+                         (github-theme-quantize-color (github-theme-color 'canvas-inset)))
+        (gh-canvas-subtle (github-theme-color 'canvas-subtle)
+                          (github-theme-quantize-color (github-theme-color 'canvas-subtle)))
 
         ;; Border colors
-        (gh-border-default (github-color 'border-default)
-                           (github-quantize-color (github-color 'border-default)))
-        (gh-border-muted (github-color 'border-muted)
-                         (github-quantize-color (github-color 'border-muted)))
+        (gh-border-default (github-theme-color 'border-default)
+                           (github-theme-quantize-color (github-theme-color 'border-default)))
+        (gh-border-muted (github-theme-color 'border-muted)
+                         (github-theme-quantize-color (github-theme-color 'border-muted)))
 
         ;; Neutral colors
-        (gh-neutral-emphasis (github-color 'neutral-emphasis)
-                             (github-quantize-color (github-color 'neutral-emphasis)))
-        (gh-neutral-muted (github-color 'neutral-muted)
-                          (github-quantize-color (github-color 'neutral-muted)))
-        (gh-neutral-subtle (github-color 'neutral-subtle)
-                           (github-quantize-color (github-color 'neutral-subtle)))
+        (gh-neutral-emphasis (github-theme-color 'neutral-emphasis)
+                             (github-theme-quantize-color (github-theme-color 'neutral-emphasis)))
+        (gh-neutral-muted (github-theme-color 'neutral-muted)
+                          (github-theme-quantize-color (github-theme-color 'neutral-muted)))
+        (gh-neutral-subtle (github-theme-color 'neutral-subtle)
+                           (github-theme-quantize-color (github-theme-color 'neutral-subtle)))
 
         ;; Accent colors
-        (gh-accent-fg (github-color 'accent-fg)
-                      (github-quantize-color (github-color 'accent-fg)))
-        (gh-accent-emphasis (github-color 'accent-emphasis)
-                            (github-quantize-color (github-color 'accent-emphasis)))
-        (gh-accent-muted (github-color 'accent-muted)
-                         (github-quantize-color (github-color 'accent-muted)))
-        (gh-accent-subtle (github-color 'accent-subtle)
-                          (github-quantize-color (github-color 'accent-subtle)))
+        (gh-accent-fg (github-theme-color 'accent-fg)
+                      (github-theme-quantize-color (github-theme-color 'accent-fg)))
+        (gh-accent-emphasis (github-theme-color 'accent-emphasis)
+                            (github-theme-quantize-color (github-theme-color 'accent-emphasis)))
+        (gh-accent-muted (github-theme-color 'accent-muted)
+                         (github-theme-quantize-color (github-theme-color 'accent-muted)))
+        (gh-accent-subtle (github-theme-color 'accent-subtle)
+                          (github-theme-quantize-color (github-theme-color 'accent-subtle)))
 
         ;; Success colors
-        (gh-success-fg (github-color 'success-fg)
-                       (github-quantize-color (github-color 'success-fg)))
-        (gh-success-emphasis (github-color 'success-emphasis)
-                             (github-quantize-color (github-color 'success-emphasis)))
+        (gh-success-fg (github-theme-color 'success-fg)
+                       (github-theme-quantize-color (github-theme-color 'success-fg)))
+        (gh-success-emphasis (github-theme-color 'success-emphasis)
+                             (github-theme-quantize-color (github-theme-color 'success-emphasis)))
 
         ;; Attention colors
-        (gh-attention-fg (github-color 'attention-fg)
-                         (github-quantize-color (github-color 'attention-fg)))
-        (gh-attention-emphasis (github-color 'attention-emphasis)
-                               (github-quantize-color (github-color 'attention-emphasis)))
+        (gh-attention-fg (github-theme-color 'attention-fg)
+                         (github-theme-quantize-color (github-theme-color 'attention-fg)))
+        (gh-attention-emphasis (github-theme-color 'attention-emphasis)
+                               (github-theme-quantize-color (github-theme-color 'attention-emphasis)))
 
         ;; Danger colors
-        (gh-danger-fg (github-color 'danger-fg)
-                      (github-quantize-color (github-color 'danger-fg)))
-        (gh-danger-emphasis (github-color 'danger-emphasis)
-                            (github-quantize-color (github-color 'danger-emphasis)))
+        (gh-danger-fg (github-theme-color 'danger-fg)
+                      (github-theme-quantize-color (github-theme-color 'danger-fg)))
+        (gh-danger-emphasis (github-theme-color 'danger-emphasis)
+                            (github-theme-quantize-color (github-theme-color 'danger-emphasis)))
 
         ;; Done colors
-        (gh-done-fg (github-color 'done-fg)
-                    (github-quantize-color (github-color 'done-fg)))
+        (gh-done-fg (github-theme-color 'done-fg)
+                    (github-theme-quantize-color (github-theme-color 'done-fg)))
 
         ;; Syntax colors
-        (gh-syntax-comment (github-color 'syntax-comment)
-                           (github-quantize-color (github-color 'syntax-comment)))
-        (gh-syntax-constant (github-color 'syntax-constant)
-                            (github-quantize-color (github-color 'syntax-constant)))
-        (gh-syntax-entity (github-color 'syntax-entity)
-                          (github-quantize-color (github-color 'syntax-entity)))
-        (gh-syntax-keyword (github-color 'syntax-keyword)
-                           (github-quantize-color (github-color 'syntax-keyword)))
-        (gh-syntax-string (github-color 'syntax-string)
-                          (github-quantize-color (github-color 'syntax-string)))
-        (gh-syntax-variable (github-color 'syntax-variable)
-                            (github-quantize-color (github-color 'syntax-variable)))
-        (gh-syntax-tag (github-color 'syntax-tag)
-                       (github-quantize-color (github-color 'syntax-tag)))
-        (gh-syntax-func (github-color 'syntax-func)
-                        (github-quantize-color (github-color 'syntax-func)))
-        (gh-syntax-param (github-color 'syntax-param)
-                         (github-quantize-color (github-color 'syntax-param)))
-        (gh-syntax-invalid (github-color 'syntax-invalid)
-                           (github-quantize-color (github-color 'syntax-invalid)))
+        (gh-syntax-comment (github-theme-color 'syntax-comment)
+                           (github-theme-quantize-color (github-theme-color 'syntax-comment)))
+        (gh-syntax-constant (github-theme-color 'syntax-constant)
+                            (github-theme-quantize-color (github-theme-color 'syntax-constant)))
+        (gh-syntax-entity (github-theme-color 'syntax-entity)
+                          (github-theme-quantize-color (github-theme-color 'syntax-entity)))
+        (gh-syntax-keyword (github-theme-color 'syntax-keyword)
+                           (github-theme-quantize-color (github-theme-color 'syntax-keyword)))
+        (gh-syntax-string (github-theme-color 'syntax-string)
+                          (github-theme-quantize-color (github-theme-color 'syntax-string)))
+        (gh-syntax-variable (github-theme-color 'syntax-variable)
+                            (github-theme-quantize-color (github-theme-color 'syntax-variable)))
+        (gh-syntax-tag (github-theme-color 'syntax-tag)
+                       (github-theme-quantize-color (github-theme-color 'syntax-tag)))
+        (gh-syntax-func (github-theme-color 'syntax-func)
+                        (github-theme-quantize-color (github-theme-color 'syntax-func)))
+        (gh-syntax-param (github-theme-color 'syntax-param)
+                         (github-theme-quantize-color (github-theme-color 'syntax-param)))
+        (gh-syntax-invalid (github-theme-color 'syntax-invalid)
+                           (github-theme-quantize-color (github-theme-color 'syntax-invalid)))
 
         ;; Git colors
-        (gh-git-added (github-color 'git-added)
-                      (github-quantize-color (github-color 'git-added)))
-        (gh-git-modified (github-color 'git-modified)
-                         (github-quantize-color (github-color 'git-modified)))
-        (gh-git-deleted (github-color 'git-deleted)
-                        (github-quantize-color (github-color 'git-deleted)))
-        (gh-git-untracked (github-color 'git-untracked)
-                          (github-quantize-color (github-color 'git-untracked)))
-        (gh-git-ignored (github-color 'git-ignored)
-                        (github-quantize-color (github-color 'git-ignored)))
-        (gh-git-conflict (github-color 'git-conflict)
-                         (github-quantize-color (github-color 'git-conflict)))
+        (gh-git-added (github-theme-color 'git-added)
+                      (github-theme-quantize-color (github-theme-color 'git-added)))
+        (gh-git-modified (github-theme-color 'git-modified)
+                         (github-theme-quantize-color (github-theme-color 'git-modified)))
+        (gh-git-deleted (github-theme-color 'git-deleted)
+                        (github-theme-quantize-color (github-theme-color 'git-deleted)))
+        (gh-git-untracked (github-theme-color 'git-untracked)
+                          (github-theme-quantize-color (github-theme-color 'git-untracked)))
+        (gh-git-ignored (github-theme-color 'git-ignored)
+                        (github-theme-quantize-color (github-theme-color 'git-ignored)))
+        (gh-git-conflict (github-theme-color 'git-conflict)
+                         (github-theme-quantize-color (github-theme-color 'git-conflict)))
 
         ;; Diff colors
-        (gh-diff-add-bg (github-color 'diff-add-bg)
-                        (github-quantize-color (github-color 'diff-add-bg)))
-        (gh-diff-add-fg (github-color 'diff-add-fg)
-                        (github-quantize-color (github-color 'diff-add-fg)))
-        (gh-diff-remove-bg (github-color 'diff-remove-bg)
-                           (github-quantize-color (github-color 'diff-remove-bg)))
-        (gh-diff-remove-fg (github-color 'diff-remove-fg)
-                           (github-quantize-color (github-color 'diff-remove-fg)))
-        (gh-diff-change-bg (github-color 'diff-change-bg)
-                           (github-quantize-color (github-color 'diff-change-bg)))
-        (gh-diff-change-fg (github-color 'diff-change-fg)
-                           (github-quantize-color (github-color 'diff-change-fg)))
+        (gh-diff-add-bg (github-theme-color 'diff-add-bg)
+                        (github-theme-quantize-color (github-theme-color 'diff-add-bg)))
+        (gh-diff-add-fg (github-theme-color 'diff-add-fg)
+                        (github-theme-quantize-color (github-theme-color 'diff-add-fg)))
+        (gh-diff-remove-bg (github-theme-color 'diff-remove-bg)
+                           (github-theme-quantize-color (github-theme-color 'diff-remove-bg)))
+        (gh-diff-remove-fg (github-theme-color 'diff-remove-fg)
+                           (github-theme-quantize-color (github-theme-color 'diff-remove-fg)))
+        (gh-diff-change-bg (github-theme-color 'diff-change-bg)
+                           (github-theme-quantize-color (github-theme-color 'diff-change-bg)))
+        (gh-diff-change-fg (github-theme-color 'diff-change-fg)
+                           (github-theme-quantize-color (github-theme-color 'diff-change-fg)))
 
         ;; Editor UI
-        (gh-cursor (github-color 'cursor)
-                   (github-quantize-color (github-color 'cursor)))
-        (gh-selection (github-color 'selection)
-                      (github-quantize-color (github-color 'selection)))
-        (gh-match (github-color 'match)
-                  (github-quantize-color (github-color 'match)))
-        (gh-line-highlight (github-color 'line-highlight)
-                           (github-quantize-color (github-color 'line-highlight)))
-        (gh-line-number (github-color 'line-number)
-                        (github-quantize-color (github-color 'line-number)))
-        (gh-line-number-active (github-color 'line-number-active)
-                               (github-quantize-color (github-color 'line-number-active)))
-        (gh-whitespace (github-color 'whitespace)
-                       (github-quantize-color (github-color 'whitespace)))
+        (gh-cursor (github-theme-color 'cursor)
+                   (github-theme-quantize-color (github-theme-color 'cursor)))
+        (gh-selection (github-theme-color 'selection)
+                      (github-theme-quantize-color (github-theme-color 'selection)))
+        (gh-match (github-theme-color 'match)
+                  (github-theme-quantize-color (github-theme-color 'match)))
+        (gh-line-highlight (github-theme-color 'line-highlight)
+                           (github-theme-quantize-color (github-theme-color 'line-highlight)))
+        (gh-line-number (github-theme-color 'line-number)
+                        (github-theme-quantize-color (github-theme-color 'line-number)))
+        (gh-line-number-active (github-theme-color 'line-number-active)
+                               (github-theme-quantize-color (github-theme-color 'line-number-active)))
+        (gh-whitespace (github-theme-color 'whitespace)
+                       (github-theme-quantize-color (github-theme-color 'whitespace)))
 
         ;; Bracket colors
-        (gh-bracket-1 (github-color 'bracket-1)
-                      (github-quantize-color (github-color 'bracket-1)))
-        (gh-bracket-2 (github-color 'bracket-2)
-                      (github-quantize-color (github-color 'bracket-2)))
-        (gh-bracket-3 (github-color 'bracket-3)
-                      (github-quantize-color (github-color 'bracket-3)))
-        (gh-bracket-4 (github-color 'bracket-4)
-                      (github-quantize-color (github-color 'bracket-4)))
-        (gh-bracket-5 (github-color 'bracket-5)
-                      (github-quantize-color (github-color 'bracket-5)))
-        (gh-bracket-6 (github-color 'bracket-6)
-                      (github-quantize-color (github-color 'bracket-6)))
+        (gh-bracket-1 (github-theme-color 'bracket-1)
+                      (github-theme-quantize-color (github-theme-color 'bracket-1)))
+        (gh-bracket-2 (github-theme-color 'bracket-2)
+                      (github-theme-quantize-color (github-theme-color 'bracket-2)))
+        (gh-bracket-3 (github-theme-color 'bracket-3)
+                      (github-theme-quantize-color (github-theme-color 'bracket-3)))
+        (gh-bracket-4 (github-theme-color 'bracket-4)
+                      (github-theme-quantize-color (github-theme-color 'bracket-4)))
+        (gh-bracket-5 (github-theme-color 'bracket-5)
+                      (github-theme-quantize-color (github-theme-color 'bracket-5)))
+        (gh-bracket-6 (github-theme-color 'bracket-6)
+                      (github-theme-quantize-color (github-theme-color 'bracket-6)))
 
         ;; ANSI colors
-        (gh-ansi-black (github-color 'ansi-black)
-                       (github-quantize-color (github-color 'ansi-black)))
-        (gh-ansi-red (github-color 'ansi-red)
-                     (github-quantize-color (github-color 'ansi-red)))
-        (gh-ansi-green (github-color 'ansi-green)
-                       (github-quantize-color (github-color 'ansi-green)))
-        (gh-ansi-yellow (github-color 'ansi-yellow)
-                        (github-quantize-color (github-color 'ansi-yellow)))
-        (gh-ansi-blue (github-color 'ansi-blue)
-                      (github-quantize-color (github-color 'ansi-blue)))
-        (gh-ansi-magenta (github-color 'ansi-magenta)
-                         (github-quantize-color (github-color 'ansi-magenta)))
-        (gh-ansi-cyan (github-color 'ansi-cyan)
-                      (github-quantize-color (github-color 'ansi-cyan)))
-        (gh-ansi-white (github-color 'ansi-white)
-                       (github-quantize-color (github-color 'ansi-white)))
-        (gh-ansi-bright-black (github-color 'ansi-bright-black)
-                              (github-quantize-color (github-color 'ansi-bright-black)))
-        (gh-ansi-bright-red (github-color 'ansi-bright-red)
-                            (github-quantize-color (github-color 'ansi-bright-red)))
-        (gh-ansi-bright-green (github-color 'ansi-bright-green)
-                              (github-quantize-color (github-color 'ansi-bright-green)))
-        (gh-ansi-bright-yellow (github-color 'ansi-bright-yellow)
-                               (github-quantize-color (github-color 'ansi-bright-yellow)))
-        (gh-ansi-bright-blue (github-color 'ansi-bright-blue)
-                             (github-quantize-color (github-color 'ansi-bright-blue)))
-        (gh-ansi-bright-magenta (github-color 'ansi-bright-magenta)
-                                (github-quantize-color (github-color 'ansi-bright-magenta)))
-        (gh-ansi-bright-cyan (github-color 'ansi-bright-cyan)
-                             (github-quantize-color (github-color 'ansi-bright-cyan)))
-        (gh-ansi-bright-white (github-color 'ansi-bright-white)
-                              (github-quantize-color (github-color 'ansi-bright-white)))
+        (gh-ansi-black (github-theme-color 'ansi-black)
+                       (github-theme-quantize-color (github-theme-color 'ansi-black)))
+        (gh-ansi-red (github-theme-color 'ansi-red)
+                     (github-theme-quantize-color (github-theme-color 'ansi-red)))
+        (gh-ansi-green (github-theme-color 'ansi-green)
+                       (github-theme-quantize-color (github-theme-color 'ansi-green)))
+        (gh-ansi-yellow (github-theme-color 'ansi-yellow)
+                        (github-theme-quantize-color (github-theme-color 'ansi-yellow)))
+        (gh-ansi-blue (github-theme-color 'ansi-blue)
+                      (github-theme-quantize-color (github-theme-color 'ansi-blue)))
+        (gh-ansi-magenta (github-theme-color 'ansi-magenta)
+                         (github-theme-quantize-color (github-theme-color 'ansi-magenta)))
+        (gh-ansi-cyan (github-theme-color 'ansi-cyan)
+                      (github-theme-quantize-color (github-theme-color 'ansi-cyan)))
+        (gh-ansi-white (github-theme-color 'ansi-white)
+                       (github-theme-quantize-color (github-theme-color 'ansi-white)))
+        (gh-ansi-bright-black (github-theme-color 'ansi-bright-black)
+                              (github-theme-quantize-color (github-theme-color 'ansi-bright-black)))
+        (gh-ansi-bright-red (github-theme-color 'ansi-bright-red)
+                            (github-theme-quantize-color (github-theme-color 'ansi-bright-red)))
+        (gh-ansi-bright-green (github-theme-color 'ansi-bright-green)
+                              (github-theme-quantize-color (github-theme-color 'ansi-bright-green)))
+        (gh-ansi-bright-yellow (github-theme-color 'ansi-bright-yellow)
+                               (github-theme-quantize-color (github-theme-color 'ansi-bright-yellow)))
+        (gh-ansi-bright-blue (github-theme-color 'ansi-bright-blue)
+                             (github-theme-quantize-color (github-theme-color 'ansi-bright-blue)))
+        (gh-ansi-bright-magenta (github-theme-color 'ansi-bright-magenta)
+                                (github-theme-quantize-color (github-theme-color 'ansi-bright-magenta)))
+        (gh-ansi-bright-cyan (github-theme-color 'ansi-bright-cyan)
+                             (github-theme-quantize-color (github-theme-color 'ansi-bright-cyan)))
+        (gh-ansi-bright-white (github-theme-color 'ansi-bright-white)
+                              (github-theme-quantize-color (github-theme-color 'ansi-bright-white)))
 
         ;; Computed colors
-        (gh-current (if (github--light-p)
-                        (github-darken (github-color 'canvas-default) 3)
-                      (github-lighten (github-color 'canvas-default) 5))
-                    (github-quantize-color
-                     (if (github--light-p)
-                         (github-darken (github-color 'canvas-default) 3)
-                       (github-lighten (github-color 'canvas-default) 5))))))
+        (gh-current (if (github-theme--light-p)
+                        (github-theme-darken (github-theme-color 'canvas-default) 3)
+                      (github-theme-lighten (github-theme-color 'canvas-default) 5))
+                    (github-theme-quantize-color
+                     (if (github-theme--light-p)
+                         (github-theme-darken (github-theme-color 'canvas-default) 3)
+                       (github-theme-lighten (github-theme-color 'canvas-default) 5))))))
      (faces
       '(
         ;;; Core faces
@@ -442,7 +442,7 @@ FLAVOR defaults to the value of `github-flavor'."
         ;; syntax / font-lock
         (font-lock-bracket-face :foreground ,gh-fg-muted)
         (font-lock-builtin-face :foreground ,gh-syntax-constant)
-        (font-lock-comment-face ,@(if github-italic-comments
+        (font-lock-comment-face ,@(if github-theme-italic-comments
                                       '(:inherit (shadow italic))
                                     '(:inherit shadow)))
         (font-lock-comment-delimiter-face :inherit shadow)
@@ -464,9 +464,9 @@ FLAVOR defaults to the value of `github-flavor'."
         (font-lock-string-face :foreground ,gh-syntax-string)
         (font-lock-type-face :foreground ,gh-syntax-variable)
         (font-lock-variable-name-face :foreground ,gh-fg-default
-                                      ,@(when github-italic-variables '(:inherit italic)))
+                                      ,@(when github-theme-italic-variables '(:inherit italic)))
         (font-lock-variable-use-face :foreground ,gh-fg-default
-                                     ,@(when github-italic-variables '(:inherit italic)))
+                                     ,@(when github-theme-italic-variables '(:inherit italic)))
         (font-lock-warning-face :inherit warning)
 
         ;;; Extended faces
@@ -688,7 +688,7 @@ FLAVOR defaults to the value of `github-flavor'."
         (magit-tag :foreground ,gh-attention-fg)
 
         ;; markdown-mode
-        (markdown-blockquote-face ,@(if github-italic-blockquotes
+        (markdown-blockquote-face ,@(if github-theme-italic-blockquotes
                                         '(:inherit italic :foreground ,gh-fg-muted)
                                       '(:foreground ,gh-fg-muted)))
         (markdown-bold-face :inherit bold)
@@ -736,7 +736,7 @@ FLAVOR defaults to the value of `github-flavor'."
         (org-level-8 :foreground ,gh-attention-fg :weight bold)
         (org-link :foreground ,gh-accent-fg :underline t)
         (org-priority :foreground ,gh-attention-fg)
-        (org-quote ,@(if github-italic-blockquotes
+        (org-quote ,@(if github-theme-italic-blockquotes
                          '(:inherit italic :foreground ,gh-fg-muted)
                        '(:foreground ,gh-fg-muted)))
         (org-special-keyword :foreground ,gh-fg-muted)
